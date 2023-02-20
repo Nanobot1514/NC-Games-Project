@@ -1,5 +1,6 @@
 const request = require("supertest");
 const app = require("../app");
+const sortedJest = "jest-sorted";
 
 const seed = require("../db/seeds/seed");
 const {
@@ -68,8 +69,10 @@ describe("app", () => {
               comment_count: expect.any(Number),
             });
           });
+          expect(body.reviews).toBeSortedBy("created_at", { coerce: true });
         });
     });
+
     it("adds the correct number to comment_count property", () => {
       return request(app)
         .get("/api/reviews")
