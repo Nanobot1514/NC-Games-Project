@@ -47,4 +47,38 @@ describe("app", () => {
         });
     });
   });
+  describe("/api/reviews", () => {
+    it("200 GET - responds with and array of review objects with the correct properties", () => {
+      return request(app)
+        .get("/api/reviews")
+        .expect(200)
+        .then(({ body }) => {
+          expect(body.reviews).toBeInstanceOf(Array);
+          expect(body.reviews).toHaveLength(13);
+          body.reviews.forEach((review) => {
+            expect(review).toMatchObject({
+              owner: expect.any(String),
+              title: expect.any(String),
+              review_id: expect.any(Number),
+              category: expect.any(String),
+              review_img_url: expect.any(String),
+              created_at: expect.any(String),
+              votes: expect.any(Number),
+              designer: expect.any(String),
+              comment_count: expect.any(Number),
+            });
+          });
+        });
+    });
+    it("adds the correct number to comment_count property", () => {
+      return request(app)
+        .get("/api/reviews")
+        .expect(200)
+        .then(({ body }) => {
+          const { reviews } = body;
+          console.log(reviews);
+          expect(reviews[5].comment_count).toBe(3);
+        });
+    });
+  });
 });
