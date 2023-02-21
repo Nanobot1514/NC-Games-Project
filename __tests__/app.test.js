@@ -79,8 +79,45 @@ describe("app", () => {
         .expect(200)
         .then(({ body }) => {
           const { reviews } = body;
-          console.log(reviews);
           expect(reviews[5].comment_count).toBe(3);
+        });
+    });
+  });
+  describe("/api/reviews/:review_id", () => {
+    it("200: GET responds to a valid request with the review object with all the correct properties", () => {
+      return request(app)
+        .get("/api/reviews/1")
+        .expect(200)
+        .then(({ body }) => {
+          const { review } = body;
+          expect(review).toMatchObject({
+            review_id: 1,
+            title: "Agricola",
+            review_body: "Farmyard fun!",
+            designer: "Uwe Rosenberg",
+            review_img_url:
+              "https://images.pexels.com/photos/974314/pexels-photo-974314.jpeg?w=700&h=700",
+            votes: 1,
+            category: "euro game",
+            owner: "mallionaire",
+            created_at: "2021-01-18T10:00:20.514Z",
+          });
+        });
+    });
+    it("responds to an invalid review_id with a 400 code and an error message 'Invalid Request'", () => {
+      return request(app)
+        .get("/api/reviews/definitely-not-an-id")
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.msg).toBe("Invalid Request");
+        });
+    });
+    it("responds to an review_id with no entry in the database with with a 404 code and an error message 'Not Found'", () => {
+      return request(app)
+        .get("/api/reviews/9999")
+        .expect(404)
+        .then(({ body }) => {
+          expect(body.msg).toBe("Not Found");
         });
     });
   });

@@ -20,6 +20,12 @@ PGDATABASE=my_database_test
 PGDATABASE=my_database
 ```
 
+Install all dependencies using
+
+```
+npm install
+```
+
 Remember to add these files to the .gitignore so you don't the risk of senstitive information about your databases being pushed to github.
 
 The connection.js file in this repo will set all of the environment variables from the .env file to the process.env.
