@@ -140,7 +140,7 @@ describe("app", () => {
           });
           console.log(body.comments);
           expect(body.comments).toBeSortedBy("created_at", {
-            descending: true,
+            coerce: true,
           });
         });
     });
