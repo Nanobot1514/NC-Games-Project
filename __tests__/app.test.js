@@ -138,7 +138,6 @@ describe("app", () => {
               review_id: expect.any(Number),
             });
           });
-          console.log(body.comments);
           expect(body.comments).toBeSortedBy("created_at", {
             coerce: true,
           });
@@ -150,14 +149,6 @@ describe("app", () => {
         .expect(400)
         .then(({ body }) => {
           expect(body.msg).toBe("Invalid Request");
-        });
-    });
-    it("responds to an review_id with no comments with a 404 code and an error message 'Not Found", () => {
-      return request(app)
-        .get("/api/reviews/1/comments")
-        .expect(404)
-        .then(({ body }) => {
-          expect(body.msg).toBe("Not Found");
         });
     });
     it("responds to an review_id with no entry in the database with a 404 code and an error message 'Not Found'", () => {

@@ -27,9 +27,6 @@ exports.fetchReviewById = (review_id) => {
 };
 
 exports.fetchReviewComments = (review_id) => {
-  if (typeof review_id !== "number") {
-    return Promise.reject("Invalid Request");
-  }
   return db
     .query(`SELECT * FROM reviews WHERE review_id = $1`, [review_id])
     .then(({ rows }) => {
