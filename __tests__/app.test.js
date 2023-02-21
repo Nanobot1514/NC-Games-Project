@@ -121,4 +121,52 @@ describe("app", () => {
         });
     });
   });
+  describe("/api/reviews/:review_id/comments", () => {
+    it("200: GET responds with an array of comment objects with the correct properties", () => {
+      return request(app)
+        .get("/api/reviews/3/comments")
+        .expect(200)
+        .then(({ body }) => {
+          expect(body.comments).toHaveLength(3);
+          body.comments.forEach((comment) => {
+            expect(comment).toMatchObject({
+              comment_id: expect.any(Number),
+              votes: expect.any(Number),
+              created_at: expect.any(String),
+              author: expect.any(String),
+              body: expect.any(String),
+              review_id: expect.any(Number),
+            });
+          });
+          console.log(body.comments);
+          expect(body.comments).toBeSortedBy("created_at", {
+            descending: true,
+          });
+        });
+    });
+    it("responds to an invalid review_id with a 400 code and an error message 'Invalid Request'", () => {
+      return request(app)
+        .get("/api/reviews/not-a-review-id/comments")
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.msg).toBe("Invalid Request");
+        });
+    });
+    it("responds to an review_id with no comments with a 404 code and an error message 'Not Found", () => {
+      return request(app)
+        .get("/api/reviews/1/comments")
+        .expect(404)
+        .then(({ body }) => {
+          expect(body.msg).toBe("Not Found");
+        });
+    });
+    it("responds to an review_id with no entry in the database with a 404 code and an error message 'Not Found'", () => {
+      return request(app)
+        .get("/api/reviews/9999/comments")
+        .expect(404)
+        .then(({ body }) => {
+          expect(body.msg).toBe("Not Found");
+        });
+    });
+  });
 });
