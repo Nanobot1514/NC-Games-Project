@@ -41,6 +41,17 @@ exports.fetchReviewComments = (review_id) => {
     });
 };
 
+exports.updateReview = (review_id, update) => {
+  const { inc_votes } = update;
+  const query = `
+  UPDATE reviews SET votes = votes + $1 WHERE review_id = $2
+  RETURNING*;`;
+  return db.query(query, [inc_votes, review_id]).then(({ rows }) => {
+    if (!rows[0]) return Promise.reject("Not Found");
+    else return rows[0];
+  });
+};
+
 exports.insertReviewComment = (review_id, newComment) => {
   const { body } = newComment;
   const query = `INSERT INTO comments (body, author, review_id)

@@ -120,6 +120,75 @@ describe("app", () => {
           expect(body.msg).toBe("Not Found");
         });
     });
+    it("201: PATCH responds with a 201 code and the review object with the vote property INCREASED by the given amount", () => {
+      const voteRequest = {
+        inc_votes: 10,
+      };
+      const expectedResponse = {
+        review_id: 1,
+        title: "Agricola",
+        review_body: "Farmyard fun!",
+        designer: "Uwe Rosenberg",
+        review_img_url:
+          "https://images.pexels.com/photos/974314/pexels-photo-974314.jpeg?w=700&h=700",
+        votes: 11,
+        category: "euro game",
+        owner: "mallionaire",
+        created_at: "2021-01-18T10:00:20.514Z",
+      };
+      return request(app)
+        .patch("/api/reviews/1")
+        .send(voteRequest)
+        .expect(200)
+        .then(({ body }) => {
+          expect(body.patchedReview).toMatchObject(expectedResponse);
+        });
+    });
+    it("201: PATCH responds with a 201 code and the review object with the vote property DECREASED by the given amount", () => {
+      return request(app)
+        .patch("/api/reviews/1")
+        .send({ inc_votes: -10 })
+        .expect(200)
+        .then(({ body }) => {
+          expect(body.patchedReview.votes).toBe(-9);
+        });
+    });
+    it("PATCH: responds to an invalid review_id with a 400 code and an error message 'Invalid Request'", () => {
+      const voteRequest = {
+        inc_votes: 10,
+      };
+      return request(app)
+        .patch("/api/reviews/definitely-not-an-id")
+        .send(voteRequest)
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.msg).toBe("Invalid Request");
+        });
+    });
+    it("PATCH: responds to an review_id with no entry in the database with with a 404 code and an error message 'Not Found'", () => {
+      const voteRequest = {
+        inc_votes: 10,
+      };
+      return request(app)
+        .patch("/api/reviews/9999")
+        .send(voteRequest)
+        .expect(404)
+        .then(({ body }) => {
+          expect(body.msg).toBe("Not Found");
+        });
+    });
+    it("responds to an invalid request body with a 400 code and an error message 'Invalid Request'", () => {
+      const invalidRequestBody = {
+        votes: "not a number",
+      };
+      return request(app)
+        .patch("/api/reviews/1")
+        .send(invalidRequestBody)
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.msg).toBe("Invalid Request");
+        });
+    });
   });
   describe("/api/reviews/:review_id/comments", () => {
     it("200: GET responds with an array of comment objects with the correct properties", () => {
