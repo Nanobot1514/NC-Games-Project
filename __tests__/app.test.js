@@ -139,7 +139,7 @@ describe("app", () => {
       return request(app)
         .patch("/api/reviews/1")
         .send(voteRequest)
-        .expect(201)
+        .expect(200)
         .then(({ body }) => {
           expect(body.patchedReview).toMatchObject(expectedResponse);
         });
@@ -148,7 +148,7 @@ describe("app", () => {
       return request(app)
         .patch("/api/reviews/1")
         .send({ inc_votes: -10 })
-        .expect(201)
+        .expect(200)
         .then(({ body }) => {
           expect(body.patchedReview.votes).toBe(-9);
         });

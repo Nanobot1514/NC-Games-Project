@@ -43,7 +43,7 @@ exports.patchReview = (req, res, next) => {
   const { body } = req;
   updateReview(review_id, body)
     .then((patchedReview) => {
-      res.status(201).send({ patchedReview });
+      res.status(200).send({ patchedReview });
     })
     .catch((err) => {
       next(err);
