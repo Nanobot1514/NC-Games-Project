@@ -1,16 +1,51 @@
 const db = require("../db/connection");
 const reviews = require("../db/data/test-data/reviews");
 
-exports.fetchReviews = () => {
-  const query = `
-       SELECT reviews.*, COUNT(comments.comment_id) AS comment_count
-                  FROM reviews
-                  LEFT JOIN comments ON reviews.review_id = comments.review_id
-                  GROUP BY reviews.review_id
-                  ORDER BY reviews.created_at DESC;`;
-  return db.query(query).then(({ rows }) => {
-    rows.forEach((row) => (row.comment_count = +row.comment_count));
-    return rows;
+exports.fetchReviews = (category, sort_by = "created_at", order = "desc") => {
+  const validSortByOptions = [
+    "review_id",
+    "title",
+    "designer",
+    "review_img_url",
+    "votes",
+    "category",
+    "owner",
+    "created_at",
+    "comment_count",
+  ];
+
+  if (sort_by && !validSortByOptions.includes(sort_by)) {
+    return Promise.reject("Invalid Request");
+  }
+
+  const orderOptions = ["asc", "desc"];
+  if (order && !orderOptions.includes(order)) {
+    return Promise.reject("Invalid Request");
+  }
+
+  let query = `
+  SELECT reviews.review_id, reviews.designer, reviews.category, reviews.title, reviews.created_at, reviews.votes, reviews.review_img_url, reviews.owner, reviews.review_body, COUNT(comments.comment_id) AS comment_count
+  FROM reviews
+  LEFT JOIN comments ON reviews.review_id = comments.review_id`;
+  const queryParams = [];
+
+  if (category !== undefined) {
+    query += ` WHERE reviews.category = $1`;
+    queryParams.push(category);
+  }
+
+  if (sort_by && order) {
+    query += `
+  GROUP BY reviews.review_id 
+  ORDER BY ${sort_by} ${order};`;
+  }
+
+  return db.query(query, queryParams).then(({ rows }) => {
+    if (!rows[0]) return Promise.reject("Not Found");
+    else {
+      rows.forEach((row) => (row.comment_count = +row.comment_count));
+      return rows;
+    }
   });
 };
 

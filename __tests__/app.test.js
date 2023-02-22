@@ -82,6 +82,74 @@ describe("app", () => {
           expect(reviews[5].comment_count).toBe(3);
         });
     });
+    describe("/api/reviews?query", () => {
+      it("responds with the correct reviews/review when a ?category query is added", () => {
+        return request(app)
+          .get("/api/reviews?category=dexterity")
+          .expect(200)
+          .then(({ body }) => {
+            expect(body.reviews).toBeInstanceOf(Array);
+            expect(body.reviews).toHaveLength(1);
+            expect(body.reviews[0]).toMatchObject({
+              review_id: 2,
+              title: "Jenga",
+              designer: "Leslie Scott",
+              owner: "philippaclaire9",
+              review_img_url:
+                "https://images.pexels.com/photos/4473494/pexels-photo-4473494.jpeg?w=700&h=700",
+              review_body: "Fiddly fun for all the family",
+              category: "dexterity",
+              created_at: "2021-01-18T10:01:41.251Z",
+              votes: 5,
+              comment_count: expect.any(Number),
+            });
+          });
+      });
+      it("responds with reviews sorted by the column in the ?sort_by query", () => {
+        return request(app)
+          .get("/api/reviews/?category=social deduction&sort_by=review_id")
+          .expect(200)
+          .then(({ body }) => {
+            expect(body.reviews).toHaveLength(11);
+            expect(body.reviews).toBeSortedBy("review_id", {
+              descending: true,
+            });
+          });
+      });
+      it("responds with reviews in the correct order when given an ?order_by query", () => {
+        return request(app)
+          .get("/api/reviews?category=social deduction&sort_by=title&order=asc")
+          .expect(200)
+          .then(({ body }) => {
+            expect(body.reviews).toHaveLength(11);
+            expect(body.reviews).toBeSortedBy("title", { descending: false });
+          });
+      });
+      it("responds to an invalid sort_by query with a 400 code and an error message 'Invalid Request'", () => {
+        return request(app)
+          .get("/api/reviews?sort_by=not-a-valid-sort-query")
+          .expect(400)
+          .then(({ body }) => {
+            expect(body.msg).toBe("Invalid Request");
+          });
+      });
+      it("responds to an invalid order_by query with a 400 code and an error message 'Invalid Request'", () => {
+        return request(app)
+          .get("/api/reviews?order=not-a-valid-order-query")
+          .expect(400)
+          .then(({ body }) => {
+            expect(body.msg).toBe("Invalid Request");
+          });
+      });
+      it("responds to a valid category query with no entry in the database with a 404 code and an error message 'Not Found'", () => {
+        return request(app)
+          .get("/api/reviews?category=not-currently-a-category")
+          .expect(404)
+          .then(({ body }) => {
+            expect(body.msg).toBe("Not Found");
+          });
+      });
+    });
   });
   describe("/api/reviews/:review_id", () => {
     it("200: GET responds to a valid request with the review object with all the correct properties", () => {
