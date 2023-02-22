@@ -43,11 +43,12 @@ exports.fetchReviewComments = (review_id) => {
 
 exports.insertReviewComment = (review_id, newComment) => {
   const { body } = newComment;
-  const author = newComment.username;
   const query = `INSERT INTO comments (body, author, review_id)
     VALUES($1, $2, $3)
     RETURNING *;`;
-  return db.query(query, [body, author, review_id]).then(({ rows }) => {
-    return rows[0];
-  });
+  return db
+    .query(query, [body, newComment.username, review_id])
+    .then(({ rows }) => {
+      return rows[0];
+    });
 };
