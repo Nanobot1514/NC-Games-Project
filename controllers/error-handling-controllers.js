@@ -2,6 +2,9 @@ exports.handlePSQLErrors = (err, req, res, next) => {
   if (err.code === "22P02") {
     console.log("PSQL", err);
     res.status(400).send({ msg: "Invalid Request" });
+  } else if (err.code === "23502") {
+    console.log("PSQL", err);
+    res.status(400).send({ msg: "Invalid Request" });
   } else next(err);
 };
 

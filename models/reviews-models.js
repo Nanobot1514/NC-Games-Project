@@ -40,3 +40,14 @@ exports.fetchReviewComments = (review_id) => {
       return rows;
     });
 };
+
+exports.updateReview = (review_id, update) => {
+  const { inc_votes } = update;
+  const query = `
+  UPDATE reviews SET votes = votes + $1 WHERE review_id = $2
+  RETURNING*;`;
+  return db.query(query, [inc_votes, review_id]).then(({ rows }) => {
+    if (!rows[0]) return Promise.reject("Not Found");
+    else return rows[0];
+  });
+};
