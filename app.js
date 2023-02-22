@@ -1,5 +1,6 @@
 const express = require("express");
 const { getCategories } = require("./controllers/categories-controllers");
+const { getUsers } = require("./controllers/users-controllers");
 
 const {
   getReviews,
@@ -15,6 +16,7 @@ const {
   handle400Errors,
   handle404Errors,
 } = require("./controllers/error-handling-controllers");
+
 const app = express();
 
 app.use(express.json());
@@ -24,6 +26,8 @@ app.get("/api", (req, res) => {
 });
 
 app.get("/api/categories", getCategories);
+
+app.get("/api/users", getUsers);
 
 app.get("/api/reviews", getReviews);
 
