@@ -69,7 +69,7 @@ describe("app", () => {
               comment_count: expect.any(Number),
             });
           });
-          expect(body.reviews).toBeSortedBy("created_at", { coerce: true });
+          expect(body.reviews).toBeSortedBy("created_at", { descending: true });
         });
     });
 
@@ -139,7 +139,7 @@ describe("app", () => {
             });
           });
           expect(body.comments).toBeSortedBy("created_at", {
-            coerce: true,
+            descending: true,
           });
         });
     });
@@ -157,6 +157,67 @@ describe("app", () => {
         .expect(404)
         .then(({ body }) => {
           expect(body.msg).toBe("Not Found");
+        });
+    });
+  });
+  describe("/api/reviews/:review_id/comments", () => {
+    it("201: POST responds with a 201 code and the comment object that was added. The votes property should also be returned with a value of 0", () => {
+      const requestBody = {
+        username: "dav3rid",
+        body: "Great game! Going to recommend to everyone I know!",
+      };
+      return request(app)
+        .post("/api/reviews/1/comments")
+        .send(requestBody)
+        .expect(201)
+        .then(({ body }) => {
+          expect(body.postedComment).toMatchObject({
+            comment_id: expect.any(Number),
+            body: "Great game! Going to recommend to everyone I know!",
+            votes: 0,
+            author: "dav3rid",
+            review_id: expect.any(Number),
+            created_at: expect.any(String),
+          });
+        });
+    });
+    it("responds to an invalid review_id with a 400 code and an error message 'Invalid Request", () => {
+      const requestBody = {
+        username: "dav3rid",
+        body: "Great game! Going to recommend to everyone I know!",
+      };
+      return request(app)
+        .post("/api/reviews/not-a-review-id/comments")
+        .send(requestBody)
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.msg).toBe("Invalid Request");
+        });
+    });
+    it("responds to an review_id with no entry in the database with a 404 code and an error message 'Not Found'", () => {
+      const requestBody = {
+        username: "dav3rid",
+        body: "Great game! Going to recommend to everyone I know!",
+      };
+      return request(app)
+        .post("/api/reviews/9999/comments")
+        .send(requestBody)
+        .expect(404)
+        .then(({ body }) => {
+          expect(body.msg).toBe("Not Found");
+        });
+    });
+    it("responds to an invalid request body with a 400 code and an error message 'Invalid Request'", () => {
+      const invalidRequestBody = {
+        invalidUser: "notausername",
+        invalidBody: 10000000,
+      };
+      return request(app)
+        .post("/api/reviews/1/comments")
+        .send(invalidRequestBody)
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.msg).toBe("Invalid Request");
         });
     });
   });
