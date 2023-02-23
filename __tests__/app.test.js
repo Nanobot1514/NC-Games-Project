@@ -290,6 +290,11 @@ describe("app", () => {
         });
     });
   });
+  describe("/api/comments/:comment_id", () => {
+    it("204 DELETE - responds with a 204 code", () => {
+      return request(app).delete("/api/comments/1").expect(204);
+    });
+  });
   describe("/api/users", () => {
     it("200 GET - responds with and array of user objects with the correct properties", () => {
       return request(app)
