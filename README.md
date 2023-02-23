@@ -1,33 +1,88 @@
-# Northcoders House of Games API
+# **Northcoders House of Games API**
 
-## Background
+## **Background**
 
 This project is an API with the intention of mimicking a real world backend service. It will be used to provide information to the front end architecture.
 
-The database will be PSQL, and you will interact with it using [node-postgres](https://node-postgres.com/).
+The database uses be PSQL, and is interacted with using [node-postgres](https://node-postgres.com/). It is hosted using [ElephantSQL](https://www.elephantsql.com/)
 
-## How to create the enviroment variables to run locally on your machine
-
-First clone this repo.
-
-Then to connect to the database's via two .env files. One for the development database and one for the test database.
-
-Like this
+A version of this API is hosted at
 
 ```
-PGDATABASE=my_database_test
-
-PGDATABASE=my_database
+https://nc-games-w79g.onrender.com/
 ```
 
-Install all dependencies using
+Adding a path e.g **/api/reviews** to the end of the url will access different endpoints (all endpoints described in the endpoints section).
+
+## **How to Setup**
+
+First clone this repo using the command:
+
+```
+git clone https://github.com/Nanobot1514/NC-Games-Project.git
+```
+
+Then install all dependencies using:
+
+**NOTE: minimum Node version of v19.3.0 and minimum Postgres version of 8.7.3 are required**
 
 ```
 npm install
 ```
 
-Remember to add these files to the .gitignore so you don't the risk of senstitive information about your databases being pushed to github.
+Then to connect to the database's via two .env files (.env.production & .env.test). One for the test database and one for the development database.
 
-The connection.js file in this repo will set all of the environment variables from the .env file to the process.env.
+Like the following:
 
-If for some reason this process was not followed correctly and the PGDATABASE environment variable was not set correctly, an error would be thrown such as 'PGDATABASE not set'\_
+```
+PGDATABASE=<my_database_test>
+
+PGDATABASE=<my_database>
+```
+
+If for some reason this process was not followed correctly and the PGDATABASE environment variable was not set correctly, an error would be thrown such as 'PGDATABASE not set'
+
+## **Seed the Databases**
+
+For the development database:
+
+```
+npm run seed
+```
+
+For production:
+
+```
+npm run seed-prod
+```
+
+## **Testing**
+
+All tests can be run using the following command:
+
+```
+npm test app.test.js
+```
+
+**AND**
+
+```
+npm test utils.test.js
+```
+
+Using **npm test** will run all tests against the test database. You can also use .only after a describe or it to run only that test.
+
+## **Endpoints**
+
+All currently available endpoints are as follows:
+
+- GET /api
+- GET /api/users
+- GET /api/categories
+- GET /api/reviews
+  - GET /api/reviews/:review_id
+  - PATCH /api/reviews/:review_id
+- GET /api/reviews/:review_id/comments
+  - POST /api/reviews/:review_id/comments
+
+Full descriptions of all endpoints are in the **endpoints.json** file as well as the GET /api endpoint.
