@@ -1,6 +1,7 @@
 const express = require("express");
 const { getCategories } = require("./controllers/categories-controllers");
 const { getUsers } = require("./controllers/users-controllers");
+const { deleteCommentById } = require("./controllers/comments-controllers");
 
 const {
   getReviews,
@@ -35,8 +36,9 @@ app.get("/api/reviews/:review_id", getReviewById);
 app.patch("/api/reviews/:review_id", patchReview);
 
 app.get("/api/reviews/:review_id/comments", getReviewComments);
-
 app.post("/api/reviews/:review_id/comments", postReviewComment);
+
+app.delete("/api/comments/:comment_id", deleteCommentById);
 
 app.use(handle400Errors);
 app.use(handlePSQLErrors);

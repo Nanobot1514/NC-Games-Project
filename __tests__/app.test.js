@@ -359,6 +359,27 @@ describe("app", () => {
         });
     });
   });
+  describe("/api/comments/:comment_id", () => {
+    it("204 DELETE - responds with a 204 code", () => {
+      return request(app).delete("/api/comments/1").expect(204);
+    });
+    it("responds to an comment_id with no entry in the database with a 404 code and an error message 'Not Found'", () => {
+      return request(app)
+        .delete("/api/comments/9999")
+        .expect(404)
+        .then(({ body }) => {
+          expect(body.msg).toBe("Not Found");
+        });
+    });
+    it("responds to an invalid comment_id with a 400 code and an error message 'Invalid Request", () => {
+      return request(app)
+        .delete("/api/comments/not-a-valid-comment-id")
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.msg).toBe("Invalid Request");
+        });
+    });
+  });
   describe("/api/users", () => {
     it("200 GET - responds with and array of user objects with the correct properties", () => {
       return request(app)
