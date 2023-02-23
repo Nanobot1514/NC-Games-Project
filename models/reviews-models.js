@@ -14,6 +14,19 @@ exports.fetchReviews = (category, sort_by = "created_at", order = "desc") => {
     "comment_count",
   ];
 
+  const validCategories = [
+    "social deduction",
+    "dexterity",
+    "children's games",
+    "euro game",
+    "strategy",
+    "hidden-roles",
+    "push-your-luck",
+    "roll-and-write",
+    "deck-building",
+    "engine-building",
+  ];
+
   if (sort_by && !validSortByOptions.includes(sort_by)) {
     return Promise.reject("Invalid Request");
   }
@@ -41,8 +54,11 @@ exports.fetchReviews = (category, sort_by = "created_at", order = "desc") => {
   }
 
   return db.query(query, queryParams).then(({ rows }) => {
-    if (!rows[0]) return Promise.reject("Not Found");
-    else {
+    if (!rows[0] && category && !validCategories.includes(category)) {
+      return Promise.reject("Not Found");
+    } else if (!rows[0] && category && validCategories.includes(category)) {
+      return rows;
+    } else {
       rows.forEach((row) => (row.comment_count = +row.comment_count));
       return rows;
     }

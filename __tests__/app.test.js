@@ -149,6 +149,14 @@ describe("app", () => {
             expect(body.msg).toBe("Not Found");
           });
       });
+      it("responds with an empty array if there are no reviews that have the searched for category", () => {
+        return request(app)
+          .get("/api/reviews?category=children's games")
+          .expect(200)
+          .then(({ body }) => {
+            expect(body.reviews).toEqual([]);
+          });
+      });
     });
   });
   describe("/api/reviews/:review_id", () => {
