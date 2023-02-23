@@ -20,15 +20,105 @@
     "exampleResponse": {
       "reviews": [
         {
+          "review_id": 3,
           "title": "One Night Ultimate Werewolf",
           "designer": "Akihisa Okui",
           "owner": "happyamy2016",
           "review_img_url": "https://images.pexels.com/photos/5350049/pexels-photo-5350049.jpeg?auto=compress&cs=tinysrgb&dpr=2&h=750&w=1260",
           "category": "hidden-roles",
           "created_at": 1610964101251,
-          "votes": 5
+          "votes": 5,
+          "comment_count": 0
+        },
+        {
+          "review_id": 2,
+          "title": "Jenga",
+          "designer": "Leslie Scott",
+          "owner": "philippaclaire9",
+          "review_img_url": "https://images.pexels.com/photos/4473494/pexels-photo-4473494.jpeg?w=700&h=700",
+          "review_body": "Fiddly fun for all the family",
+          "category": "dexterity",
+          "created_at": 1610964101251,
+          "votes": 5,
+          "comment_count": 0
         }
       ]
+    }
+  },
+  "GET /api/users": {
+    "description": "serves an array of all users",
+    "queries": [],
+    "exampleResponse": {
+      "users": [
+        {
+          "username": "mallionaire",
+          "name": "haz",
+          "avatar_url": "https://www.healthytherapies.com/wp-content/uploads/2016/06/Lime3.jpg"
+        }
+      ]
+    }
+  },
+  "GET /api/reviews/:review_id": {
+    "description": "serves an object of the requested review by id with the body included",
+    "queries": [],
+    "exampleResponse": {
+      "review": {
+        "review_id": 2,
+        "title": "Jenga",
+        "designer": "Leslie Scott",
+        "owner": "philippaclaire9",
+        "review_img_url": "https://images.pexels.com/photos/4473494/pexels-photo-4473494.jpeg?w=700&h=700",
+        "review_body": "Fiddly fun for all the family",
+        "category": "dexterity",
+        "created_at": 1610964101251,
+        "votes": 5
+      }
+    }
+  },
+  "PATCH /api/reviews/:review_id": {
+    "description": "Updates a review by review id, adds to the vote count by the values of inc_votes and returns the object with the updated information",
+    "exampleResponse": {
+      "review": {
+        "review_id": 12,
+        "title": "Scythe; you're gonna need a bigger table!",
+        "designer": "Jamey Stegmaier",
+        "owner": "mallionaire",
+        "review_img_url": "https://images.pexels.com/photos/4200740/pexels-photo-4200740.jpeg?w=700&h=700",
+        "review_body": "Spend 30 minutes just setting up all of the boards (!) meeple and decks, just to forget how to play. Scythe can be a lengthy game but really packs a punch if you put the time in. With beautiful artwork, countless scenarios and clever game mechanics, this board game is a must for any board game fanatic; just make sure you explain ALL the rules before you start playing with first timers or you may find they bring it up again and again.",
+        "category": "social deduction",
+        "created_at": 1611311824839,
+        "votes": 100
+      }
+    }
+  },
+  "GET /api/reviews/:review_id/comments": {
+    "description": "serves an array of the all comments by review id",
+    "queries": [],
+    "exampleResponse": {
+      "comments": [
+        {
+          "comment_id": 1,
+          "body": "I loved this game too!",
+          "votes": 16,
+          "author": "bainesface",
+          "review_id": 2,
+          "created_at": 1511354613389
+        }
+      ]
+    }
+  },
+  "POST /api/reviews/:review_id/comments": {
+    "description": "posts a new comment to the review specified by review id, returns the posted comment",
+    "queries": [],
+    "exampleResponse": {
+      "postedComment": {
+        "comment_id": 4,
+        "body": "EPIC board game!",
+        "votes": 16,
+        "author": "bainesface",
+        "review_id": 2,
+        "created_at": 1511354163389
+      }
     }
   }
 }

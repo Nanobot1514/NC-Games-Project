@@ -11,6 +11,7 @@ const {
 } = require("../db/data/test-data/index");
 
 const db = require("../db/connection");
+const endpoints = require("../endpoints.json");
 
 beforeEach(() => {
   return seed({ categoryData, commentData, reviewData, userData });
@@ -22,12 +23,12 @@ afterAll(() => {
 
 describe("app", () => {
   describe("/api", () => {
-    it("200 GET - responds with a server OK message", () => {
+    it("responds with an object with the properties describing every available endpoint", () => {
       return request(app)
         .get("/api")
         .expect(200)
-        .then((response) => {
-          expect(response.body.msg).toBe("All Ok");
+        .then(({ body }) => {
+          expect(body.endpoints).toEqual(endpoints);
         });
     });
   });
