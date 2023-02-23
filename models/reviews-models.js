@@ -51,13 +51,18 @@ exports.fetchReviews = (category, sort_by = "created_at", order = "desc") => {
 
 exports.fetchReviewById = (review_id) => {
   const query = `
-      SELECT review_id, title, review_body, designer, review_img_url, votes, category, owner, created_at
-      FROM reviews
-      WHERE review_id = $1;
+  SELECT reviews.review_id, reviews.designer, reviews.category, reviews.title, reviews.created_at, reviews.votes, reviews.review_img_url, reviews.owner, reviews.review_body, COUNT(comments.comment_id) AS comment_count
+  FROM reviews
+  LEFT JOIN comments ON reviews.review_id = comments.review_id
+      WHERE reviews.review_id = $1
+      GROUP BY reviews.review_id;
       `;
   return db.query(query, [review_id]).then(({ rows }) => {
     if (!rows[0]) return Promise.reject("Not Found");
-    else return rows[0];
+    else {
+      rows[0].comment_count = +rows[0].comment_count;
+      return rows[0];
+    }
   });
 };
 

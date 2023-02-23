@@ -152,23 +152,24 @@ describe("app", () => {
     });
   });
   describe("/api/reviews/:review_id", () => {
-    it("200: GET responds to a valid request with the review object with all the correct properties", () => {
+    it("200: GET responds to a valid request with the review object with all the correct properties including the comment_count", () => {
       return request(app)
-        .get("/api/reviews/1")
+        .get("/api/reviews/3")
         .expect(200)
         .then(({ body }) => {
           const { review } = body;
           expect(review).toMatchObject({
-            review_id: 1,
-            title: "Agricola",
-            review_body: "Farmyard fun!",
-            designer: "Uwe Rosenberg",
+            category: "social deduction",
+            comment_count: 3,
+            created_at: "2021-01-18T10:01:41.251Z",
+            designer: "Akihisa Okui",
+            owner: "bainesface",
+            review_body: "We couldn't find the werewolf!",
+            review_id: 3,
             review_img_url:
-              "https://images.pexels.com/photos/974314/pexels-photo-974314.jpeg?w=700&h=700",
-            votes: 1,
-            category: "euro game",
-            owner: "mallionaire",
-            created_at: "2021-01-18T10:00:20.514Z",
+              "https://images.pexels.com/photos/5350049/pexels-photo-5350049.jpeg?w=700&h=700",
+            title: "Ultimate Werewolf",
+            votes: 5,
           });
         });
     });
