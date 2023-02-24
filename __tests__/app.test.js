@@ -406,5 +406,28 @@ describe("app", () => {
           });
         });
     });
+    describe("/api/users/:username", () => {
+      it("200 GET - responds with a user object with the correct properties", () => {
+        return request(app)
+          .get("/api/users/bainesface")
+          .then(({ body }) => {
+            const { user } = body;
+            expect(user).toMatchObject({
+              username: "bainesface",
+              avatar_url:
+                "https://avatars2.githubusercontent.com/u/24394918?s=400&v=4",
+              name: "sarah",
+            });
+          });
+      });
+      it("responds to a username with no entry in the database with with a 404 code and an error message 'Not Found'", () => {
+        return request(app)
+          .get("/api/users/not-a-username")
+          .expect(404)
+          .then(({ body }) => {
+            expect(body.msg).toBe("Not Found");
+          });
+      });
+    });
   });
 });
