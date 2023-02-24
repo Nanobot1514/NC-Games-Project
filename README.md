@@ -78,6 +78,7 @@ All currently available endpoints are as follows:
 
 - GET /api
 - GET /api/users
+  - GET/api/users/:username
 - GET /api/categories
 - GET /api/reviews
   - GET /api/reviews/:review_id
