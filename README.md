@@ -4,7 +4,7 @@
 
 This project is an API with the intention of mimicking a real world backend service. It will be used to provide information to the front end architecture.
 
-The database uses be PSQL, and is interacted with using [node-postgres](https://node-postgres.com/). It is hosted using [ElephantSQL](https://www.elephantsql.com/)
+The database uses PSQL, and is interacted with using [node-postgres](https://node-postgres.com/). It is hosted using [ElephantSQL](https://www.elephantsql.com/)
 
 A version of this API is hosted at
 
@@ -58,16 +58,16 @@ npm run seed-prod
 
 ## **Testing**
 
-All tests can be run using the following command:
+All tests can be run using the following command assuming the working directory is correct:
 
 ```
-npm test app.test.js
+npm test app
 ```
 
 **AND**
 
 ```
-npm test utils.test.js
+npm test utils
 ```
 
 Using **npm test** will run all tests against the test database. You can also use .only after a describe or it to run only that test.
