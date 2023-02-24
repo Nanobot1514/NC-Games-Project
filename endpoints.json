@@ -131,5 +131,22 @@
         "created_at": 1511354163389
       }
     }
+  },
+  "PATCH /api/comments/:comment_id": {
+    "description": "Updates the votes property of the specified comment_id and returns the comment object",
+    "queries": [],
+    "exampleResponse": {
+      "patchedComment": {
+        "comment_id": 4,
+        "body": "EPIC board game!",
+        "votes": 26,
+        "author": "bainesface",
+        "review_id": 2,
+        "created_at": 1511354163389
+      }
+    }
+  },
+  "DELETE /api/comments/:comment_id": {
+    "description": "Removes the entire comment from the database specified by comment_id, responds with a 404 code"
   }
 }

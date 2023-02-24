@@ -85,5 +85,7 @@ All currently available endpoints are as follows:
   - PATCH /api/reviews/:review_id
 - GET /api/reviews/:review_id/comments
   - POST /api/reviews/:review_id/comments
+- PATCH /api/comments/:comment_id
+  - DELETE /api/comments/:comment_id
 
 Full descriptions of all endpoints are in the **endpoints.json** file as well as the GET /api endpoint.

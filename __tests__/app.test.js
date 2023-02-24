@@ -198,7 +198,7 @@ describe("app", () => {
           expect(body.msg).toBe("Not Found");
         });
     });
-    it("201: PATCH responds with a 201 code and the review object with the vote property INCREASED by the given amount", () => {
+    it("200: PATCH responds with a 200 code and the review object with the vote property INCREASED by the given amount", () => {
       const voteRequest = {
         inc_votes: 10,
       };
@@ -222,7 +222,7 @@ describe("app", () => {
           expect(body.patchedReview).toMatchObject(expectedResponse);
         });
     });
-    it("201: PATCH responds with a 201 code and the review object with the vote property DECREASED by the given amount", () => {
+    it("200: PATCH responds with a 200 code and the review object with the vote property DECREASED by the given amount", () => {
       return request(app)
         .patch("/api/reviews/1")
         .send({ inc_votes: -10 })
@@ -383,6 +383,70 @@ describe("app", () => {
     it("responds to an invalid comment_id with a 400 code and an error message 'Invalid Request", () => {
       return request(app)
         .delete("/api/comments/not-a-valid-comment-id")
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.msg).toBe("Invalid Request");
+        });
+    });
+    it("200: PATCH responds with a 200 code and the comment object with the vote property INCREASED by the given amount", () => {
+      const voteRequest = {
+        inc_votes: 10,
+      };
+      const expectedResponse = {
+        body: "I loved this game too!",
+        votes: 26,
+        author: "bainesface",
+        review_id: 2,
+        created_at: "2017-11-22T12:43:33.389Z",
+      };
+      return request(app)
+        .patch("/api/comments/1")
+        .send({ inc_votes: 10 })
+        .expect(200)
+        .then(({ body }) => {
+          expect(body.patchedComment).toMatchObject(expectedResponse);
+        });
+    });
+    it("200: PATCH responds with a 200 code and the comment object with the vote property DECREASED by the given amount", () => {
+      return request(app)
+        .patch("/api/comments/1")
+        .send({ inc_votes: -10 })
+        .expect(200)
+        .then(({ body }) => {
+          expect(body.patchedComment.votes).toBe(6);
+        });
+    });
+    it("PATCH: responds to an invalid comment_id with a 400 code and an error message 'Invalid Request'", () => {
+      const voteRequest = {
+        inc_votes: 10,
+      };
+      return request(app)
+        .patch("/api/comments/definitely-not-an-id")
+        .send(voteRequest)
+        .expect(400)
+        .then(({ body }) => {
+          expect(body.msg).toBe("Invalid Request");
+        });
+    });
+    it("PATCH: responds to an comment_id with no entry in the database with with a 404 code and an error message 'Not Found'", () => {
+      const voteRequest = {
+        inc_votes: 10,
+      };
+      return request(app)
+        .patch("/api/comments/9999")
+        .send(voteRequest)
+        .expect(404)
+        .then(({ body }) => {
+          expect(body.msg).toBe("Not Found");
+        });
+    });
+    it("responds to an invalid request body with a 400 code and an error message 'Invalid Request'", () => {
+      const invalidRequestBody = {
+        votes: "not a number",
+      };
+      return request(app)
+        .patch("/api/comments/1")
+        .send(invalidRequestBody)
         .expect(400)
         .then(({ body }) => {
           expect(body.msg).toBe("Invalid Request");
